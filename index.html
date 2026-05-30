@@ -1,0 +1,35 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/textgame.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+      rel="stylesheet" />
+    <title>Behram's Interactive Fiction</title>
+  </head>
+  <body>
+    <header id="top-bar">
+      <div id="weather-widget" class="weather" aria-live="polite">Loading weather...</div>
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label="Toggle dark and light theme">
+        Theme
+      </button>
+    </header>
+
+    <main id="terminal">
+      <div id="output"></div>
+      <div id="input-line">
+        <span class="prompt">$></span>
+        <input
+          type="text"
+          id="input"
+          aria-label="Enter a game command" />
+      </div>
+    </main>
+
+    <script src="assets/js/textgame.js" type="text/javascript"></script>
+  </body>
+</html>
