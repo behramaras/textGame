@@ -215,7 +215,7 @@ The stylesheet `assets/css/textgame.css` was tested using the [W3C Jigsaw CSS Va
 
 Result: No errors found in custom CSS.
 
-<img src="documentation/errors/jigsaw-css/css.png" alt="W3C Jigsaw CSS validation result showing no errors" style="width:100%; max-width:800px;">
+<img src="documentation/errors/jigsaw-css/css - no errors.png" alt="W3C Jigsaw CSS validation result showing no errors" style="width:100%; max-width:800px;">
 
 #### JavaScript Linting
 
