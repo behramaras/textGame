@@ -1,0 +1,241 @@
+/* --- Global Styles --- */
+
+body,
+html {
+  background-image: repeating-linear-gradient(
+    transparent 0,
+    rgba(0, 0, 0, 0.8) 1px,
+    transparent 2px
+  );
+  height: 100%;
+  margin: 0;
+  background-color: black;
+  font-family: "VT323", monospace;
+  color: #ccffcc;
+  font-size: 25px;
+}
+
+/* --- Flickering Keyframes --- */
+@keyframes flicker {
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
+    opacity: 1;
+  }
+  20%,
+  24%,
+  55% {
+    text-shadow: 0 0 1px #ccffcc;
+    opacity: 0.8;
+  }
+}
+
+/* --- Top Bar --- */
+#top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  pointer-events: none;
+  background-color: black;
+  border-bottom: 1px solid #333333;
+}
+
+#weather-widget,
+#theme-toggle {
+  pointer-events: auto;
+}
+
+#weather-widget {
+  font-family: "VT323", monospace;
+  font-size: 25px;
+  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
+  animation: flicker 2s infinite alternate;
+}
+
+.weather {
+  color: #ffffff;
+}
+
+#theme-toggle {
+  font-family: "VT323", monospace;
+  font-size: 25px;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid #ccffcc;
+  cursor: pointer;
+  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
+  animation: flicker 2s infinite alternate;
+}
+
+#theme-toggle:hover {
+  background: rgba(204, 255, 204, 0.1);
+}
+
+/* --- Light Mode --- */
+html.light-mode {
+  background-color: #f5f0e1;
+  background-image: none;
+}
+
+html.light-mode body {
+  background-color: #f5f0e1;
+  background-image: none;
+  color: #1a1a1a;
+}
+
+html.light-mode #terminal {
+  text-shadow: none;
+  animation: none;
+  background-image: none;
+}
+
+html.light-mode #input {
+  text-shadow: none;
+  animation: none;
+}
+
+html.light-mode .prompt {
+  text-shadow: none;
+}
+
+html.light-mode #top-bar {
+  background-color: #f5f0e1;
+}
+
+html.light-mode #weather-widget {
+  color: #8b0000;
+  text-shadow: none;
+  animation: none;
+}
+
+html.light-mode #theme-toggle {
+  color: #8b0000;
+  border-color: #8b0000;
+  text-shadow: none;
+  animation: none;
+}
+
+html.light-mode #theme-toggle:hover {
+  background: rgba(26, 26, 26, 0.08);
+}
+
+/* --- Terminal Output Area --- */
+#terminal {
+  padding: 60px 20px 20px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
+  animation: flicker 2s infinite alternate;
+  background-image: repeating-linear-gradient(
+    transparent 0,
+    rgba(0, 0, 0, 0.4) 1px,
+    transparent 2px
+  );
+}
+
+/* --- Input Area --- */
+#input-line {
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  margin-right: 5px;
+  text-shadow: 0 0 5px #ffffff;
+}
+
+#input {
+  width: 100%;
+  border: none;
+  background: none;
+  outline: none;
+  color: inherit;
+  font-family: "VT323", monospace;
+  font-size: 25px;
+  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
+  animation: flicker 2s infinite alternate;
+}
+
+/* --- Input Area --- */
+@media (max-width: 768px) {
+  body,
+  html {
+    font-size: 22px;
+  }
+
+  #top-bar {
+    padding: 8px 16px;
+  }
+
+  #weather-widget,
+  #theme-toggle {
+    font-size: 22px;
+  }
+
+  #terminal {
+    padding: 55px 16px 16px;
+  }
+
+  #input {
+    font-size: 22px;
+  }
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 480px) {
+  body,
+  html {
+    font-size: 18px;
+  }
+
+  #top-bar {
+    padding: 6px 10px;
+  }
+
+  #weather-widget,
+  #theme-toggle {
+    font-size: 18px;
+  }
+
+  #terminal {
+    padding: 50px 10px 10px;
+  }
+
+  #input {
+    font-size: 18px;
+  }
+}
+
+.highlight {
+  color: #00e5ff;
+}
+
+.cmd {
+  color: #00e5ff;
+}
+
+html.light-mode .highlight {
+  color: #007700;
+}
+
+html.light-mode .cmd {
+  color: #007700;
+}
+
+.game-over {
+  color: #ff2222;
+}
