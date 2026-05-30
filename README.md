@@ -2,7 +2,7 @@
 
 Behram's Interactive Fiction is a single-page text adventure game built with HTML, CSS, and vanilla JavaScript. Players explore a haunted house from a retro terminal interface—moving between rooms, reading descriptions, and trying to reach the treasure before a grim fate in the butcher's basement. The experience combines classic interactive fiction with a live weather readout, a dark/light theme toggle, and responsive layout for phones, tablets, and desktops.
 
-**View Site** → [Behram's Interactive Fiction](https://behramaras.github.io/textgame/) *(GitHub Pages placeholder)*
+**View Site** → [Behram's Interactive Fiction](https://behramaras.github.io/textgame/)
 
 ![Screenshot of the game on different devices](documentation/mockup.png)
 
@@ -291,7 +291,7 @@ Performance, Accessibility, Best Practices, and SEO were tested using Google Lig
 
 ### Deployment
 
-Site deployed using GitHub Pages at Behram's Interactive Fiction *(placeholder URL: `https://behramaras.github.io/textgame/`)*
+Site deployed using GitHub Pages at Behram's Interactive Fiction
 
 **Steps to deploy a website using GitHub Pages**
 
