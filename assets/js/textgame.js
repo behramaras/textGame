@@ -117,7 +117,7 @@ function printWelcomeScreen() {
     <div class="welcome-header">
       <hr class="welcome-divider">
       <p class="welcome-title">BEHRAM'S INTERACTIVE FICTION ENGINE v1.0</p>
-      <p class="welcome-subtitle">Copyright &copy; 2026 Behram Interactive</p>
+      <p class="welcome-subtitle">Copyright &copy; 2026 Behram Aras</p>
       <hr class="welcome-divider">
     </div>
     <hr class="output-divider">`;
