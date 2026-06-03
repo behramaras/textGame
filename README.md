@@ -2,7 +2,7 @@
 
 Behram's Interactive Fiction is a single-page text adventure game built with HTML, CSS, and vanilla JavaScript. Players explore a haunted house from a retro terminal interface—moving between rooms, reading descriptions, and trying to reach the treasure before a grim fate in the butcher's basement. The experience combines classic interactive fiction with a live weather readout, a dark/light theme toggle, and responsive layout for phones, tablets, and desktops.
 
-**View Site** → [Behram's Interactive Fiction](https://behramaras.github.io/textGame/)
+**View Site** → [Behram's Interactive Fiction](https://behramaras.github.io/textgame/)
 
 ![Screenshot of the game on different devices](documentation/mockup.png)
 
@@ -145,9 +145,69 @@ The project uses one display family from [Google Fonts](https://fonts.google.com
 - **Reason:** A monospaced pixel-style face that reinforces the retro command-line identity and keeps command text aligned with the `$>` prompt.
 
 ### Wireframes
+```text
 
-Wireframes were not created for this project. Layout decisions were made directly in HTML and CSS, using a single scrolling terminal column with a fixed top bar for weather and theme controls.
+Desktop (>768px)
+┌──────────────────────────────────────────────────┐
+│  ☁️ London · 18°C · Cloudy              🌓       │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ┌────────────────────────────────────────────┐  │
+│  │  $> BEHRAM'S INTERACTIVE FICTION v1.0      │  │
+│  │  $> Copyright (c) 2026                     │  │
+│  │  $> What is your name?                     │  │
+│  │                                             │  │
+│  │  $> John                                   │  │
+│  │  $> Welcome, John!                         │  │
+│  │  $> You are in a dark room...              │  │
+│  │  $> There is a door to the north.          │  │
+│  │                                             │  │
+│  │  $> north                                  │  │
+│  │  $> You are in a hallway...                │  │
+│  │                                             │  │
+│  │              (scrolling area)               │  │
+│  └────────────────────────────────────────────┘  │
+│                                                  │
+├──────────────────────────────────────────────────┤
+│  $>  _                                           │
+└──────────────────────────────────────────────────┘
 
+Tablet (768px)
+
+┌────────────────────────────┐
+│ ☁️ London · 18°C     🌓    │
+├────────────────────────────┤
+│ ┌────────────────────────┐ │
+│ │ $> BEHRAM'S...         │ │
+│ │ $> Copyright...        │ │
+│ │ $> What is your name?  │ │
+│ │                        │ │
+│ │ $> John                │ │
+│ │ $> Welcome, John!      │ │
+│ │ $> Dark room...        │ │
+│ └────────────────────────┘ │
+├────────────────────────────┤
+│ $>  _                      │
+└────────────────────────────┘
+
+Mobile (480px)
+
+┌──────────────────┐
+│ ☁️ 18°C     🌓   │
+├──────────────────┤
+│ ┌──────────────┐ │
+│ │ $> BEHRAM'S  │ │
+│ │ $> Copyright │ │
+│ │ $> Name?     │ │
+│ │              │ │
+│ │ $> John      │ │
+│ │ $> Welcome   │ │
+│ │ $> Dark room │ │
+│ └──────────────┘ │
+├──────────────────┤
+│ $>  _            │
+└──────────────────┘
+```
 ---
 
 ## Features
