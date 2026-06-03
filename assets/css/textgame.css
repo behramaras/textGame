@@ -1,42 +1,128 @@
-/* --- Global Styles --- */
+/* Design Tokens */
 
-body,
-html {
-  background-image: repeating-linear-gradient(
-    transparent 0,
-    rgba(0, 0, 0, 0.8) 1px,
-    transparent 2px
-  );
-  height: 100%;
-  margin: 0;
-  background-color: black;
-  font-family: "VT323", monospace;
-  color: #ccffcc;
-  font-size: 25px;
+:root {
+  --top-bar-height: 48px;
+  --input-bar-height: 52px;
+  --terminal-inset: 16px;
+  --terminal-radius: 8px;
+
+  /* Dark terminal (default) */
+  --terminal-bg: #0a0e0a;
+  --terminal-fg: #33ff33;
+  --terminal-glow: rgba(51, 255, 51, 0.5);
+  --terminal-scanline: rgba(51, 255, 51, 0.05);
+  --terminal-prompt: #66ff66;
+  --terminal-accent: #ffff66;
+  --terminal-input-bg: rgba(0, 0, 0, 0.2);
 }
 
-/* --- Flickering Keyframes --- */
+html.light-mode {
+  --terminal-bg: #f5f5dc;
+  --terminal-fg: #2b2b2b;
+  --terminal-glow: rgba(43, 43, 43, 0.3);
+  --terminal-scanline: rgba(43, 43, 43, 0.05);
+  --terminal-prompt: #8b4513;
+  --terminal-accent: #4169e1;
+  --terminal-input-bg: rgba(0, 0, 0, 0.06);
+}
+
+/* --- Global Styles --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  padding-top: var(--top-bar-height);
+  padding-bottom: var(--input-bar-height);
+  background-color: var(--terminal-bg);
+  font-family: "VT323", ui-monospace, monospace;
+  font-size: 22px;
+  line-height: 1.6;
+  color: var(--terminal-fg);
+}
+
+/* CRT scanline overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0.28;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--terminal-scanline) 2px,
+    var(--terminal-scanline) 4px
+  );
+  animation: flicker 0.15s infinite;
+}
+
 @keyframes flicker {
-  0%,
-  19%,
-  21%,
-  23%,
-  25%,
-  54%,
-  56%,
-  100% {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes terminal-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
     text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
     opacity: 1;
   }
-  20%,
-  24%,
-  55% {
+  20%, 24%, 55% {
     text-shadow: 0 0 1px #ccffcc;
     opacity: 0.8;
   }
 }
 
+.prompt {
+  margin-right: 5px;
+  animation: terminal-flicker 2s infinite alternate;
+}
+
+@keyframes crt-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 10px #00ff00,
+      0 0 30px rgba(0, 255, 0, 0.45),
+      0 0 60px rgba(0, 255, 0, 0.2),
+      inset 0 0 60px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 15px #00ff00,
+      0 0 40px rgba(0, 255, 0, 0.55),
+      0 0 70px rgba(0, 255, 0, 0.25),
+      inset 0 0 60px rgba(0, 0, 0, 0.3);
+  }
+}
+
 /* --- Top Bar --- */
+
 #top-bar {
   position: fixed;
   top: 0;
@@ -45,197 +131,340 @@ html {
   z-index: 100;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  pointer-events: none;
-  background-color: black;
-  border-bottom: 1px solid #333333;
-}
-
-#weather-widget,
-#theme-toggle {
-  pointer-events: auto;
+  align-items: center;
+  height: var(--top-bar-height);
+  padding: 0 24px;
+  background-color: var(--terminal-bg);
+  border-bottom: 1px solid var(--terminal-fg);
 }
 
 #weather-widget {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
   font-family: "VT323", monospace;
-  font-size: 25px;
-  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
-  animation: flicker 2s infinite alternate;
+  font-size: inherit;
 }
 
-.weather {
-  color: #ffffff;
+#weather-widget svg {
+  fill: #ffffff;
+}
+
+/* 8-bit pixel cloud — retro CRT weather icon */
+.weather-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 22px;
+  height: 14px;
+  position: relative;
+}
+
+.weather-icon::before,
+.weather-icon::after {
+  content: "";
+  position: absolute;
+  background: #ccffcc;
+  box-shadow: 0 0 6px #00ff00, 0 0 12px rgba(0, 255, 0, 0.4);
+}
+
+.weather-icon::before {
+  bottom: 0;
+  left: 1px;
+  width: 20px;
+  height: 5px;
+}
+
+.weather-icon::after {
+  bottom: 3px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  box-shadow:
+    0 0 6px #00ff00,
+    0 0 12px rgba(0, 255, 0, 0.4),
+    7px 1px 0 #ccffcc,
+    7px 1px 6px #00ff00,
+    7px 1px 12px rgba(0, 255, 0, 0.4),
+    14px 0 0 #ccffcc,
+    14px 0 6px #00ff00,
+    14px 0 12px rgba(0, 255, 0, 0.4);
 }
 
 #theme-toggle {
-  font-family: "VT323", monospace;
-  font-size: 25px;
-  color: #ffffff;
   background: transparent;
-  border: 1px solid #ccffcc;
+  border: none;
   cursor: pointer;
-  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
-  animation: flicker 2s infinite alternate;
+  font-size: 22px;
+  padding: 4px;
+  color: #ffffff;
 }
 
-#theme-toggle:hover {
-  background: rgba(204, 255, 204, 0.1);
+/* --- Terminal Container --- */
+
+#terminal {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 48px);
+  max-width: 900px;
+  height: calc(100vh - 120px);
+  margin: 60px auto 0;
+  padding: 32px 40px;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  background-color: var(--terminal-bg);
+  border: 2px solid #00ff00;
+  border-radius: var(--terminal-radius);
+  box-shadow:
+    0 0 10px #00ff00,
+    0 0 30px rgba(0, 255, 0, 0.45),
+    0 0 60px rgba(0, 255, 0, 0.2),
+    inset 0 0 60px rgba(0, 0, 0, 0.3);
+  animation: crt-glow 3s ease-in-out infinite;
 }
 
-/* --- Light Mode --- */
-html.light-mode {
-  background-color: #f5f0e1;
-  background-image: none;
+#terminal::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
-html.light-mode body {
-  background-color: #f5f0e1;
-  background-image: none;
-  color: #1a1a1a;
+/* --- Welcome Header --- */
+
+.welcome-header {
+  text-align: center;
+  margin-bottom: 0;
+  animation: terminal-flicker 2s infinite alternate;
+}
+
+.welcome-title {
+  margin: 16px 0 4px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #ccffcc;
+  text-align: center;
+}
+
+.welcome-subtitle {
+  margin: 0 0 16px;
+  font-size: 20px;
+  color: #ccffcc;
+  text-align: center;
+}
+
+.welcome-divider,
+.output-divider {
+  display: block;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-top: 2px solid #00ff00;
+}
+
+.output-divider {
+  margin: 24px 0 16px;
+}
+
+html.light-mode .welcome-divider,
+html.light-mode .output-divider {
+  border-top-color: var(--terminal-fg);
 }
 
 html.light-mode #terminal {
-  text-shadow: none;
-  animation: none;
-  background-image: none;
-}
-
-html.light-mode #input {
-  text-shadow: none;
+  border-color: var(--terminal-fg);
+  box-shadow:
+    0 0 20px var(--terminal-glow),
+    inset 0 0 40px rgba(0, 0, 0, 0.05);
   animation: none;
 }
 
-html.light-mode .prompt {
-  text-shadow: none;
-}
+/* --- Terminal Output --- */
 
-html.light-mode #top-bar {
-  background-color: #f5f0e1;
-}
-
-html.light-mode #weather-widget {
-  color: #8b0000;
-  text-shadow: none;
-  animation: none;
-}
-
-html.light-mode #theme-toggle {
-  color: #8b0000;
-  border-color: #8b0000;
-  text-shadow: none;
-  animation: none;
-}
-
-html.light-mode #theme-toggle:hover {
-  background: rgba(26, 26, 26, 0.08);
-}
-
-/* --- Terminal Output Area --- */
-#terminal {
-  padding: 60px 20px 20px;
-  height: 100%;
-  box-sizing: border-box;
+#output {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
-  animation: flicker 2s infinite alternate;
-  background-image: repeating-linear-gradient(
-    transparent 0,
-    rgba(0, 0, 0, 0.4) 1px,
-    transparent 2px
-  );
+  text-shadow: 0 0 8px var(--terminal-glow);
 }
 
-/* --- Input Area --- */
+#output .prompt {
+  display: inline;
+  margin-right: 0.35em;
+  color: var(--terminal-prompt);
+  font-weight: 500;
+}
+
+#output > div {
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: var(--terminal-fg);
+}
+
+/* --- Input Bar (fixed bottom) --- */
+
 #input-line {
+  z-index: 50;
   display: flex;
   align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  margin-left: 0;
+  padding-top: 10px;
+  height: var(--input-bar-height);
+  padding-left: 0;
+  padding-right: 24px;
+  background-color: var(--terminal-bg);
+  border-top: 1px solid #333;
 }
 
-.prompt {
-  margin-right: 5px;
-  text-shadow: 0 0 5px #ffffff;
+#input-line .prompt {
+  flex-shrink: 0;
+  color: var(--terminal-prompt);
+  font-weight: 500;
 }
 
 #input {
+  flex: 1;
   width: 100%;
   border: none;
   background: none;
   outline: none;
-  color: inherit;
-  font-family: "VT323", monospace;
-  font-size: 25px;
-  text-shadow: 0 0 2px #ccffcc, 0 0 10px #00ff00;
-  animation: flicker 2s infinite alternate;
+  color: var(--terminal-fg);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.6;
+  text-shadow: 0 0 8px var(--terminal-glow);
+  caret-color: var(--terminal-prompt);
 }
 
-/* --- Input Area --- */
-@media (max-width: 768px) {
-  body,
-  html {
-    font-size: 22px;
-  }
-
-  #top-bar {
-    padding: 8px 16px;
-  }
-
-  #weather-widget,
-  #theme-toggle {
-    font-size: 22px;
-  }
-
-  #terminal {
-    padding: 55px 16px 16px;
-  }
-
-  #input {
-    font-size: 22px;
-  }
+#input::placeholder {
+  color: var(--terminal-fg);
+  opacity: 0.4;
 }
 
-/* --- Responsive: Mobile --- */
-@media (max-width: 480px) {
-  body,
-  html {
-    font-size: 18px;
-  }
+/* --- Highlight & Command Classes --- */
 
-  #top-bar {
-    padding: 6px 10px;
-  }
-
-  #weather-widget,
-  #theme-toggle {
-    font-size: 18px;
-  }
-
-  #terminal {
-    padding: 50px 10px 10px;
-  }
-
-  #input {
-    font-size: 18px;
-  }
-}
-
-.highlight {
-  color: #00e5ff;
-}
-
+.highlight,
 .cmd {
-  color: #00e5ff;
-}
-
-html.light-mode .highlight {
-  color: #007700;
-}
-
-html.light-mode .cmd {
-  color: #007700;
+  color: var(--terminal-accent);
 }
 
 .game-over {
-  color: #ff2222;
+  color: #ff4444;
+}
+
+html.light-mode .game-over {
+  color: #cc0000;
+}
+
+html.light-mode #theme-toggle {
+  color: #1a1a1a;
+}
+
+html.light-mode #weather-widget {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+html.light-mode #weather-widget svg {
+  fill: #1a1a1a;
+  filter: none;
+}
+
+html.light-mode .weather-icon::before,
+html.light-mode .weather-icon::after {
+  background: #1a1a1a;
+  box-shadow: none;
+}
+
+html.light-mode .weather-icon::after {
+  box-shadow: 7px 1px 0 #1a1a1a, 14px 0 0 #1a1a1a;
+}
+
+html.light-mode body {
+  color: #1a1a1a;
+}
+
+html.light-mode #output > div {
+  color: #1a1a1a;
+}
+
+html.light-mode #input {
+  color: #1a1a1a;
+}
+
+html.light-mode .welcome-title,
+html.light-mode .welcome-subtitle {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+html.light-mode .welcome-header {
+  animation: none;
+  text-shadow: none;
+}
+
+html.light-mode .prompt {
+  animation: none;
+  text-shadow: none;
+}
+
+html.light-mode #output {
+  text-shadow: none;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 20px;
+  }
+
+  #top-bar {
+    padding: 0 16px;
+  }
+
+  #weather-widget {
+    font-size: 16px;
+  }
+
+  #terminal {
+    width: calc(100% - 32px);
+    margin-top: 40px;
+    padding: 24px 20px;
+  }
+
+  .welcome-title {
+    font-size: 22px;
+  }
+
+  .welcome-subtitle {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 18px;
+  }
+
+  #top-bar {
+    padding: 0 12px;
+  }
+
+  #weather-widget {
+    font-size: 14px;
+  }
+
+  #terminal {
+    width: calc(100% - 24px);
+    margin-top: 32px;
+    padding: 20px 16px;
+  }
+
+  .welcome-title {
+    font-size: 20px;
+  }
 }
