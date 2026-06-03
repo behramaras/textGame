@@ -1,12 +1,20 @@
 const inputEl = document.getElementById("input");
 const outputEl = document.getElementById("output");
 const themeToggleEl = document.getElementById("theme-toggle");
-const weatherWidgetEl = document.getElementById("weather-widget");
+const weatherTextEl = document.getElementById("weather-text");
+
+const SUN_ICON =
+  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const MOON_ICON =
+  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
 
 let playerName = null;
 let awaitingName = true;
 let gameEnded = false;
 let currentRoom = "start";
+
+const commandHistory = [];
+let historyIndex = -1;
 
 const rooms = {
   start: {
@@ -37,16 +45,48 @@ const rooms = {
 
 function scrollToBottom() {
   const terminal = document.getElementById("terminal");
+  const output = document.getElementById("output");
   terminal.scrollTop = terminal.scrollHeight;
+  output.scrollTop = output.scrollHeight;
+  requestAnimationFrame(() => {
+    terminal.scrollTop = terminal.scrollHeight;
+  });
 }
 
 /**
  * Appends formatted lines to the terminal output area.
  * @param {string} text - The text content to display.
+ * @param {Function} [callback] - Optional callback after typing completes.
  */
-function appendOutput(text) {
-  outputEl.innerHTML += `<div class="prompt">$></div><div>${text}</div>`;
-  scrollToBottom();
+function appendOutput(text, callback) {
+  const container = document.createElement("div");
+  const prompt = document.createElement("span");
+  prompt.className = "prompt";
+  prompt.textContent = "$>";
+  const content = document.createElement("span");
+  container.appendChild(prompt);
+  container.appendChild(document.createTextNode(" "));
+  container.appendChild(content);
+  outputEl.appendChild(container);
+
+  let i = 0;
+  const chars = [];
+  const temp = document.createElement("div");
+  temp.innerHTML = text;
+  const fullText = temp.innerHTML;
+
+  function typeNext() {
+    if (i < fullText.length) {
+      content.innerHTML = fullText.substring(0, i + 1);
+      i++;
+      scrollToBottom();
+      setTimeout(typeNext, 18);
+    } else {
+      scrollToBottom();
+      if (callback) callback();
+    }
+  }
+  typeNext();
 }
 
 /**
@@ -57,24 +97,30 @@ function setPlayerName(name) {
   playerName = name.charAt(0).toUpperCase() + name.slice(1);
   awaitingName = false;
   appendOutput(
-    `Welcome to Behram's Interactive Fiction, <span class="highlight">${playerName}</span>! 
-    The commands are: <span class="cmd">
-    look up</span>, <span class="cmd">look down</span>, 
-    <span class="cmd">north</span>, <span class="cmd">south</span>, 
-    <span class="cmd">east</span>, and <span class="cmd">west</span>`
+    `Welcome to Behram's Interactive Fiction, <span class="highlight">${playerName}</span>! The commands are: <span class="cmd">look up</span>, <span class="cmd">look down</span>, <span class="cmd">north</span>, <span class="cmd">south</span>, <span class="cmd">east</span>, <span class="cmd">west</span>, and <span class="cmd">help</span>. If you forget the commands, just type <span class="cmd">help</span>!`,
+    () => {
+      appendOutput(
+        `So hero: <span class="highlight">${playerName}</span>! Can you find the treasure before you get chopped up by the zombie butcher?`,
+        () => {
+          appendOutput("Quick tip...always look up first!");
+        }
+      );
+    }
   );
-  appendOutput(
-    `So hero: <span class="highlight">${playerName}</span>! Can you find the treasure before you get chopped up by the zombie butcher?`
-  );
-  appendOutput("quick tip...always look up first!");
 }
 
 /**
  * Prints the initial copyright screen and name prompt.
  */
 function printWelcomeScreen() {
-  appendOutput(`Behram's Interactive Fiction,Copyright (c) 2026,
-Behram Aras, Inc. All rights reserved.`);
+  outputEl.innerHTML = `
+    <div class="welcome-header">
+      <hr class="welcome-divider">
+      <p class="welcome-title">BEHRAM'S INTERACTIVE FICTION ENGINE v1.0</p>
+      <p class="welcome-subtitle">Copyright &copy; 2026 Behram Interactive</p>
+      <hr class="welcome-divider">
+    </div>
+    <hr class="output-divider">`;
   appendOutput("What is your name?");
 }
 
@@ -89,6 +135,7 @@ function restartGame() {
   inputEl.disabled = false;
   outputEl.innerHTML = "";
   printWelcomeScreen();
+  scrollToBottom();
 }
 
 /**
@@ -101,16 +148,16 @@ function applyEndGameState(previousRoom) {
   }
 
   if (currentRoom === "treasureRoom") {
-    inputEl.disabled = true;
-    appendOutput("<span class='game-over'>VICTORY!</span> You found the treasure and escaped rich!");
-    appendOutput("Type '<span class='game-over'>restart</span>' to play again.");
     gameEnded = true;
-    inputEl.disabled = false;
+    appendOutput(
+      "<span class='game-over'>VICTORY!</span> You found the treasure and escaped rich!",
+      () => {
+        appendOutput("Type '<span class='game-over'>restart</span>' to play again.");
+      }
+    );
   } else if (currentRoom === "butchersBasement") {
-    inputEl.disabled = true;
-    appendOutput("Type '<span class='game-over'>restart</span>' to play again.");
     gameEnded = true;
-    inputEl.disabled = false;
+    appendOutput("Type '<span class='game-over'>restart</span>' to play again.");
   }
 }
 
@@ -122,14 +169,18 @@ function handleCommand(command) {
   const lowerCommand = command.toLowerCase().trim();
 
   if (lowerCommand === "restart") {
-    outputEl.innerHTML += `<div class="prompt">$></div><div>${command}</div>`;
+    outputEl.innerHTML += `<div><span class="prompt">$></span> <span>${command}</span></div>`;
+    scrollToBottom();
+    setTimeout(scrollToBottom, 10);
     restartGame();
     return;
   }
 
   if (gameEnded) {
-    outputEl.innerHTML += `<div class="prompt">$></div><div>${command}</div>`;
+    outputEl.innerHTML += `<div><span class="prompt">$></span> <span>${command}</span></div>`;
     appendOutput("Type '<span class='game-over'>restart</span>' to play again.");
+    scrollToBottom();
+    setTimeout(scrollToBottom, 10);
     return;
   }
 
@@ -186,13 +237,20 @@ function handleCommand(command) {
       }
       break;
 
+    case "help":
+      output = `Available commands: <span class="cmd">look up</span>, <span class="cmd">look down</span>, <span class="cmd">north</span>, <span class="cmd">south</span>, <span class="cmd">east</span>, <span class="cmd">west</span>, <span class="cmd">help</span>, <span class="cmd">restart</span>`;
+      break;
+
     default:
-      output = "Unknown command: " + command;
+      output = `Unknown command: "<span class="highlight">${command}</span>". Try one of these: <span class="cmd">look up</span>, <span class="cmd">look down</span>, <span class="cmd">north</span>, <span class="cmd">south</span>, <span class="cmd">east</span>, <span class="cmd">west</span>`;
+      break;
   }
 
-  outputEl.innerHTML += `<div class="prompt">$></div><div>${command}</div><div>${output}</div>`;
-  applyEndGameState(previousRoom);
+  const userInputDiv = document.createElement("div");
+  userInputDiv.innerHTML = `<span class="prompt">$></span> <span>${command}</span>`;
+  outputEl.appendChild(userInputDiv);
   scrollToBottom();
+  appendOutput(output, () => applyEndGameState(previousRoom));
 }
 
 /**
@@ -200,6 +258,27 @@ function handleCommand(command) {
  * @param {KeyboardEvent} event - The keydown event from the input element.
  */
 function handleInputKeydown(event) {
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+      historyIndex++;
+      inputEl.value = commandHistory[historyIndex];
+    }
+    return;
+  }
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    if (historyIndex > 0) {
+      historyIndex--;
+      inputEl.value = commandHistory[historyIndex];
+    } else {
+      historyIndex = -1;
+      inputEl.value = "";
+    }
+    return;
+  }
+
   if (event.key !== "Enter") {
     return;
   }
@@ -212,8 +291,14 @@ function handleInputKeydown(event) {
     return;
   }
 
+  if (command.trim()) {
+    commandHistory.unshift(command.trim());
+    historyIndex = -1;
+  }
+
   if (awaitingName) {
-    outputEl.innerHTML += `<div class="prompt">$></div><div>${command}</div>`;
+    outputEl.innerHTML += `<div><span class="prompt">$></span> <span>${command}</span></div>`;
+    scrollToBottom();
     setPlayerName(command.trim());
     inputEl.value = "";
     return;
@@ -231,6 +316,9 @@ function applyTheme() {
   const savedTheme = localStorage.getItem("textgame-theme");
   if (savedTheme === "light") {
     document.documentElement.classList.add("light-mode");
+    themeToggleEl.innerHTML = MOON_ICON;
+  } else {
+    themeToggleEl.innerHTML = SUN_ICON;
   }
 }
 
@@ -240,6 +328,7 @@ function applyTheme() {
 function toggleTheme() {
   const isLight = document.documentElement.classList.toggle("light-mode");
   localStorage.setItem("textgame-theme", isLight ? "light" : "dark");
+  themeToggleEl.innerHTML = isLight ? MOON_ICON : SUN_ICON;
 }
 
 /**
@@ -265,7 +354,7 @@ function weatherCodeToCondition(code) {
  * @param {string} condition - The weather condition description.
  */
 function updateWeatherWidget(city, temp, condition) {
-  weatherWidgetEl.textContent = `${city} · ${Math.round(temp)}°C · ${condition}`;
+  weatherTextEl.textContent = `${city} · ${Math.round(temp)}°C · ${condition}`;
 }
 
 /** Default fallback coordinates for London when geolocation is unavailable. */
@@ -319,7 +408,7 @@ function fetchCityName(latitude, longitude) {
  * @param {string} [sourceLabel] - Optional label for console logging (e.g. "London fallback").
  */
 function fetchWeather(latitude, longitude, sourceLabel) {
-  weatherWidgetEl.textContent = "Loading weather...";
+  weatherTextEl.textContent = "Loading weather...";
 
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${latitude}` +
@@ -357,7 +446,7 @@ function fetchWeather(latitude, longitude, sourceLabel) {
     })
     .catch((error) => {
       console.error("[Weather Widget] Open-Meteo fetch failed:", error.message);
-      weatherWidgetEl.textContent = "Weather unavailable";
+      weatherTextEl.textContent = "Weather unavailable";
     });
 }
 
@@ -381,7 +470,7 @@ function fallbackToLondonWeather(error) {
  * Fetches current weather from Open-Meteo using browser geolocation.
  */
 function initWeather() {
-  weatherWidgetEl.textContent = "Loading weather...";
+  weatherTextEl.textContent = "Loading weather...";
 
   if (!navigator.geolocation) {
     fallbackToLondonWeather("Geolocation API not supported in this browser");
