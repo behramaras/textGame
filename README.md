@@ -211,6 +211,8 @@ Mobile (480px)
 ---
 ## How to Play
 
+![Gameplay Screenshot - Terminal interface with look up command](documentation/gameplay-screenshot.png)
+
 ### Getting Started
 
 1. Enter your name when prompted
