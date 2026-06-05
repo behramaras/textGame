@@ -238,6 +238,46 @@ Find the **treasure room** to win. But be careful — the kitchen basement leads
 - Some rooms have multiple exits
 - Type `restart` after game over or victory to play again
 
+```markdown
+## Project Structure
+
+```
+textGame/
+│
+├── index.html                # Main entry point, terminal layout
+│
+├── assets/
+│   ├── css/
+│   │   └── textgame.css      # All styles: CRT effects, themes, responsive
+│   │
+│   └── js/
+│       └── textgame.js       # Game logic: rooms, commands, weather, UI
+│
+├── documentation/            # Project documentation assets
+│   ├── errors/               # Validation screenshots (HTML, CSS, JS)
+│   │   ├── validator.v3/
+│   │   └── jigsaw-css/
+│   │
+│   ├── lighthouse/           # Performance test screenshots
+│   │
+│   ├── color-palette.png     # Design color reference
+│   └── mockup.png            # Multi-device mockup image
+│
+├── .gitignore                # Ignored files (macOS .DS_Store, etc.)
+├── README.md                 # Project documentation (this file)
+└── TESTING.md                # Detailed testing and validation report
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Semantic HTML structure with top bar, terminal output, and input line |
+| `textgame.css` | Retro terminal styling, dark/light themes, CRT animations, responsive breakpoints |
+| `textgame.js` | Core game engine: room navigation, command parsing, weather API, theme persistence |
+| `TESTING.md` | Comprehensive test results including validation, Lighthouse, and functional tests |
+```
+
 ## Features
 
 The repository contains three application files: `index.html`, `assets/css/textgame.css`, and `assets/js/textgame.js`.
