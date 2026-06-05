@@ -70,7 +70,6 @@ function appendOutput(text, callback) {
   outputEl.appendChild(container);
 
   let i = 0;
-  const chars = [];
   const temp = document.createElement("div");
   temp.innerHTML = text;
   const fullText = temp.innerHTML;
@@ -383,14 +382,7 @@ function fetchCityName(latitude, longitude) {
     })
     .then((data) => {
       const address = data.address || {};
-      return (
-        address.city ||
-        address.town ||
-        address.village ||
-        address.municipality ||
-        address.county ||
-        "Unknown"
-      );
+      return address.city || address.town || address.village || address.municipality || address.county || "Unknown";
     })
     .catch((error) => {
       console.error(
@@ -424,8 +416,7 @@ function fetchWeather(latitude, longitude, sourceLabel) {
       return response.json();
     }),
     fetchCityName(latitude, longitude),
-  ])
-    .then(([data, cityName]) => {
+  ]).then(([data, cityName]) => {
       if (
         !data.current ||
         data.current.temperature_2m == null ||
@@ -455,11 +446,7 @@ function fetchWeather(latitude, longitude, sourceLabel) {
  * @param {GeolocationPositionError|string} error - The geolocation error or reason string.
  */
 function fallbackToLondonWeather(error) {
-  const reason =
-    typeof error === "string"
-      ? error
-      : `code ${error.code}: ${error.message}`;
-
+  const reason = typeof error === "string" ? error : `code ${error.code}: ${error.message}`;
   console.error(
     `[Weather Widget] Geolocation failed (${reason}). Falling back to London (${LONDON_LAT}, ${LONDON_LON}).`
   );
