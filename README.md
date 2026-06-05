@@ -285,8 +285,14 @@ Result: No errors found in custom CSS.
 
 **Results:** No errors found. All syntax is valid.
 
+**JSHint Validation Results:**
+
 ![JSHint Validation Results](documentation/errors/javascript-lint-jshint.png)
+
+**Node.js Syntax Check:**
+
 ![Node.js Syntax Check](documentation/errors/node-syntax-check.png)
+
 #### Lighthouse Testing
 
 Performance, Accessibility, Best Practices, and SEO were tested using Google Lighthouse. Screenshots stored in `documentation/lighthouse/`.
