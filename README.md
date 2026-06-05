@@ -209,6 +209,34 @@ Mobile (480px)
 └──────────────────┘
 ```
 ---
+## How to Play
+
+### Getting Started
+
+1. Enter your name when prompted
+2. Read the welcome message with available commands
+3. Type `look up` to see your current room description
+4. Use direction commands to explore: `north`, `south`, `east`, `west`
+
+### Available Commands
+
+| Command | Action |
+|---------|--------|
+| `north`, `south`, `east`, `west` | Move in that direction |
+| `look up` | Read current room description |
+| `look down` | Go downstairs (if available) |
+| `help` | Show available commands |
+| `restart` | Restart the game |
+
+### Goal
+
+Find the **treasure room** to win. But be careful — the kitchen basement leads to a **game over**!
+
+### Tips
+
+- Always `look up` when entering a new room
+- Some rooms have multiple exits
+- Type `restart` after game over or victory to play again
 
 ## Features
 
