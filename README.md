@@ -237,7 +237,7 @@ Find the **treasure room** to win. But be careful — the kitchen basement leads
 - Always `look up` when entering a new room
 - Some rooms have multiple exits
 - Type `restart` after game over or victory to play again
-
+```markdown
 ## Project Structure
 
 textGame/
@@ -264,7 +264,7 @@ textGame/
 ├── .gitignore                # Ignored files (macOS .DS_Store, etc.)
 ├── README.md                 # Project documentation (this file)
 └── TESTING.md                # Detailed testing and validation report
-
+```
 ### Key Files
 
 | File | Purpose |
