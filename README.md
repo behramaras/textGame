@@ -279,8 +279,14 @@ Result: No errors found in custom CSS.
 
 #### JavaScript Linting
 
-`assets/js/textgame.js` was checked with the editor’s JavaScript linter and `node --check` for syntax errors. No issues were reported.
+`assets/js/textgame.js` was checked using:
+- **JSHint** for code quality and error detection
+- **Node.js** (`node --check`) for syntax validation
 
+**Results:** No errors found. All syntax is valid.
+
+![JSHint Validation Results](documentation/errors/javascript-lint-jshint.png)
+![Node.js Syntax Check](documentation/errors/node-syntax-check.png)
 #### Lighthouse Testing
 
 Performance, Accessibility, Best Practices, and SEO were tested using Google Lighthouse. Screenshots stored in `documentation/lighthouse/`.
