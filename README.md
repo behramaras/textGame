@@ -254,12 +254,17 @@ textGame/
 ├── documentation/            # Project documentation assets
 │   ├── errors/               # Validation screenshots (HTML, CSS, JS)
 │   │   ├── validator.v3/
-│   │   └── jigsaw-css/
+│   │   ├── jigsaw-css/
+│   │   ├── javascript-lint-jshint.png
+│   │   └── node-syntax-check.png
 │   │
 │   ├── lighthouse/           # Performance test screenshots
+│   │   ├── lighthouse-desktop.png
+│   │   └── lighthouse-mobile.png
 │   │
 │   ├── color-palette.png     # Design color reference
 │   └── mockup.png            # Multi-device mockup image
+│
 │
 ├── .gitignore                # Ignored files (macOS .DS_Store, etc.)
 ├── README.md                 # Project documentation (this file)
