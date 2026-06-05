@@ -278,7 +278,6 @@ textGame/
 | `textgame.css` | Retro terminal styling, dark/light themes, CRT animations, responsive breakpoints |
 | `textgame.js` | Core game engine: room navigation, command parsing, weather API, theme persistence |
 | `TESTING.md` | Comprehensive test results including validation, Lighthouse, and functional tests |
-```
 
 ## Features
 
