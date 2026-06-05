@@ -237,9 +237,9 @@ Find the **treasure room** to win. But be careful — the kitchen basement leads
 - Always `look up` when entering a new room
 - Some rooms have multiple exits
 - Type `restart` after game over or victory to play again
-```markdown
-## Project Structure
 
+## Project Structure
+```markdown
 textGame/
 │
 ├── index.html                # Main entry point, terminal layout
