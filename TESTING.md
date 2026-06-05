@@ -80,23 +80,22 @@ The stylesheet includes:
 ## JavaScript Validation
 
 JavaScript validation was performed using:
-- **ESLint** for code quality checking
+- **JSHint** for code quality checking
 - **Node.js** (`node --check`) for syntax validation
 
 **File tested:** `assets/js/textgame.js`
 
 **Result:** No syntax errors. Clean validation output.
 
-### ESLint Results and Justification
+### JSHint Results
 
-When running ESLint, the following issues were identified and addressed:
+When running JSHint, the following was observed:
 
-| Issue | Status | Justification |
-|-------|--------|----------------|
-| Missing semicolons | ✅ Fixed | Added where required |
-| Unused variables | ✅ Fixed | Removed or utilised |
-| `const`/`let` usage | ✅ Fixed | Replaced `var` where appropriate |
-| Function documentation | ✅ Added | JSDoc comments for all functions |
+| Item | Result |
+|------|--------|
+| Syntax errors | ✅ None |
+| Undefined variables | ✅ None |
+| Unused variables | ✅ None |
 
 All intentional warnings have been documented and justified:
 - The use of `innerHTML` for terminal output is intentional for the typing animation effect
